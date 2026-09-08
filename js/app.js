@@ -918,12 +918,46 @@ const IS_STANDALONE = matchMedia('(display-mode: standalone)').matches ||
                       navigator.standalone===true || IS_NATIVE_WRAPPER;
 
 if(IS_IOS && !IS_STANDALONE) $('#iosInstall').hidden = false;
-$('#btnInstall').onclick = async ()=>{
-  if(!deferredPrompt) return;
+async function runInstallPrompt(){
+  if(!deferredPrompt) return false;
+  // MUST be called inside the user gesture — browsers reject prompt() on load,
+  // which is why no app can install itself automatically.
   deferredPrompt.prompt();
   const { outcome } = await deferredPrompt.userChoice;
-  if(outcome==='accepted'){ toast(t('installed')); $('#btnInstall').hidden=true; }
-  deferredPrompt=null;
-};
+  deferredPrompt = null;
+  if(outcome==='accepted'){ toast(t('installed')); $('#btnInstall').hidden=true; hideBanner(); return true; }
+  return false;
+}
+$('#btnInstall').onclick = runInstallPrompt;
+
+/* ── auto-appearing install banner ──────────────────────────
+   The closest thing to "install on entry" that any OS permits:
+   Android/desktop get the real prompt behind one tap; iOS gets pointed at
+   the Share button, because it exposes no install API at all. */
+const HINT_KEY = 'cvb.installHint';
+function hideBanner(){ $('#installBanner').hidden = true; }
+function dismissBanner(){
+  hideBanner();
+  try{ localStorage.setItem(HINT_KEY, String(Date.now())); }catch(e){}
+}
+function maybeShowBanner(){
+  if(IS_STANDALONE || IS_NATIVE_WRAPPER) return;      // already installed
+  let seen = null;
+  try{ seen = localStorage.getItem(HINT_KEY); }catch(e){}
+  if(seen) return;                                     // already dismissed once
+  const iosRoute = IS_IOS && !deferredPrompt;
+  if(!deferredPrompt && !iosRoute) return;             // nothing useful to offer
+  $('#ibIos').hidden   = !iosRoute;
+  $('#ibAction').hidden = iosRoute;                    // no button iOS could honour
+  $('#installBanner').hidden = false;
+}
+$('#ibClose').onclick  = dismissBanner;
+$('#ibAction').onclick = async ()=>{ if(await runInstallPrompt()) dismissBanner(); };
+addEventListener('appinstalled', ()=>{ dismissBanner(); toast(t('installed')); });
+
+// Android/desktop: show as soon as the browser says it is installable.
+addEventListener('beforeinstallprompt', ()=> setTimeout(maybeShowBanner, 1800));
+// iOS: no such event will ever fire, so offer the manual route on its own.
+if(IS_IOS) setTimeout(maybeShowBanner, 2200);
 
 boot();

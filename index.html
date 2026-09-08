@@ -357,6 +357,33 @@
   <div class="sheet-body" id="sheetBody"></div>
 </div>
 
+<!-- Appears by itself on first visit. No page can self-install: Android gets the
+     real one-tap prompt, iOS gets pointed at the Share button. -->
+<div class="install-banner" id="installBanner" hidden>
+  <button class="ib-close" id="ibClose" aria-label="dismiss">
+    <svg viewBox="0 0 24 24"><path d="M6 6l12 12M18 6L6 18" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+  </button>
+  <div class="ib-row">
+    <img class="ib-icon" src="icons/icon-192.png" alt="">
+    <div class="ib-txt">
+      <b data-i18n="ib_title">ثبّت التطبيق على جهازك</b>
+      <small data-i18n="ib_sub">لتفتحه بضغطة واحدة ويعمل دون إنترنت</small>
+    </div>
+    <button class="btn btn-brand btn-sm" id="ibAction" data-i18n="ib_action">تثبيت</button>
+  </div>
+  <div class="ib-ios" id="ibIos" hidden>
+    <div class="ib-steps">
+      <span><i class="ib-n">1</i><span data-i18n="ib_ios1">اضغط زر المشاركة بالأسفل</span>
+        <svg class="ib-share" viewBox="0 0 24 24"><path d="M12 15.5V3.5M8.5 7l3.5-3.5L15.5 7" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"/><path d="M6 11.5H5a1 1 0 0 0-1 1v7a1 1 0 0 0 1 1h14a1 1 0 0 0 1-1v-7a1 1 0 0 0-1-1h-1" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round"/></svg>
+      </span>
+      <span><i class="ib-n">2</i><span data-i18n="ib_ios2">اختر «إضافة إلى الشاشة الرئيسية»</span></span>
+    </div>
+    <div class="ib-arrow" aria-hidden="true">
+      <svg viewBox="0 0 24 24"><path d="M12 4v15M6 13.5l6 6 6-6" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+    </div>
+  </div>
+</div>
+
 <div class="toast" id="toast"></div>
 <input type="file" id="importInput" accept="application/json,.json" hidden>
 
