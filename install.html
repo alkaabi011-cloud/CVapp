@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="theme-color" content="#6d28d9">
+<title>تثبيت التطبيق · Install CV Builder</title>
+<link rel="icon" href="icons/icon.svg" type="image/svg+xml">
+<link rel="apple-touch-icon" sizes="180x180" href="icons/apple-touch-icon.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;900&display=swap">
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+:root{--brand:#6d28d9;--brand2:#2563eb;--ink:#12142a;--mut:#5b5f7d;--line:#e6e7f2;--bg:#f4f5fb;--card:#fff}
+@media (prefers-color-scheme:dark){
+  :root{--ink:#eceefb;--mut:#a2a7c8;--line:#272a42;--bg:#0b0c16;--card:#161829}
+}
+body{font-family:'Cairo',system-ui,sans-serif;background:var(--bg);color:var(--ink);
+  min-height:100dvh;display:grid;place-items:center;padding:20px;line-height:1.7}
+.card{width:100%;max-width:560px;background:var(--card);border:1px solid var(--line);
+  border-radius:26px;overflow:hidden;box-shadow:0 18px 50px rgba(18,20,42,.12)}
+.head{background:linear-gradient(135deg,#7c3aed,#4f46e5 45%,#2563eb);color:#fff;
+  padding:26px 24px;text-align:center;position:relative}
+.head::after{content:"";position:absolute;inset:0;
+  background:radial-gradient(420px 200px at 80% 0%,rgba(255,255,255,.22),transparent 60%)}
+.head img{width:66px;height:66px;border-radius:17px;margin:0 auto 12px;display:block;
+  box-shadow:0 8px 22px rgba(0,0,0,.28);position:relative}
+.head h1{font-size:21px;font-weight:900;position:relative}
+.head p{font-size:13px;opacity:.92;margin-top:4px;position:relative}
+.qrwrap{padding:26px 24px 18px;text-align:center}
+.qr{width:230px;height:230px;padding:14px;background:#fff;border-radius:18px;
+  border:1px solid var(--line);margin:0 auto;display:block}
+.url{display:inline-block;margin-top:16px;font-size:12.5px;font-weight:700;direction:ltr;
+  background:color-mix(in srgb,var(--brand) 10%,transparent);color:var(--brand);
+  padding:8px 15px;border-radius:99px;word-break:break-all;text-decoration:none}
+.hint{font-size:12.5px;color:var(--mut);margin-top:12px}
+.steps{padding:4px 24px 26px}
+.sec{border-top:1px solid var(--line);padding-top:18px;margin-top:18px}
+.sec:first-child{border-top:0;margin-top:0}
+.sec h2{font-size:14.5px;font-weight:800;display:flex;align-items:center;gap:9px;margin-bottom:12px}
+.sec h2 svg{width:19px;height:19px;flex:none}
+ol{list-style:none;counter-reset:s;display:flex;flex-direction:column;gap:10px}
+li{counter-increment:s;display:flex;gap:11px;align-items:flex-start;font-size:13.5px;color:var(--mut)}
+li::before{content:counter(s);flex:none;width:23px;height:23px;border-radius:50%;
+  background:var(--brand);color:#fff;font-size:11.5px;font-weight:800;
+  display:grid;place-items:center;margin-top:2px}
+li b{color:var(--ink);font-weight:700}
+.foot{padding:16px 24px 22px;border-top:1px solid var(--line);text-align:center;
+  font-size:11.5px;color:var(--mut)}
+.en{direction:ltr;text-align:left;font-size:12px;opacity:.85;margin-top:5px}
+@media print{
+  body{background:#fff;padding:0}
+  .card{box-shadow:none;border:0;max-width:100%}
+  .head{-webkit-print-color-adjust:exact;print-color-adjust:exact}
+}
+</style>
+</head>
+<body>
+<div class="card">
+  <div class="head">
+    <img src="icons/icon-192.png" alt="">
+    <h1>منشئ السيرة الذاتية</h1>
+    <p>CV Builder — يعمل بدون إنترنت</p>
+  </div>
+
+  <div class="qrwrap">
+    <img class="qr" src="qr-install.svg" alt="QR code linking to the app">
+    <a class="url" href="https://alkaabi011-cloud.github.io/CVapp/">alkaabi011-cloud.github.io/CVapp/</a>
+    <p class="hint">وجّه كاميرا هاتفك إلى الرمز أعلاه<span class="en">Point your phone camera at the code above</span></p>
+  </div>
+
+  <div class="steps">
+    <div class="sec">
+      <h2>
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" style="color:var(--brand)"><path d="M12 15.5V3.5M8.5 7l3.5-3.5L15.5 7"/><path d="M6 11.5H5a1 1 0 0 0-1 1v7a1 1 0 0 0 1 1h14a1 1 0 0 0 1-1v-7a1 1 0 0 0-1-1h-1"/></svg>
+        على الآيفون والآيباد — iPhone &amp; iPad
+      </h2>
+      <ol>
+        <li><span>افتح الرابط في متصفح <b>Safari</b> تحديداً<span class="en">Open the link in <b>Safari</b> — not Chrome</span></span></li>
+        <li><span>اضغط زر <b>المشاركة</b> في الشريط السفلي<span class="en">Tap the <b>Share</b> button</span></span></li>
+        <li><span>اختر <b>«إضافة إلى الشاشة الرئيسية»</b><span class="en">Choose <b>Add to Home Screen</b></span></span></li>
+        <li><span>اضغط <b>«إضافة»</b> — وسيعمل بعدها دون إنترنت<span class="en">Tap <b>Add</b> — it then works offline</span></span></li>
+      </ol>
+    </div>
+
+    <div class="sec">
+      <h2>
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" style="color:var(--brand)"><rect x="6" y="2.5" width="12" height="19" rx="2.5"/><path d="M10.5 18.5h3"/></svg>
+        على الأندرويد — Android
+      </h2>
+      <ol>
+        <li><span>افتح الرابط في <b>Chrome</b><span class="en">Open the link in <b>Chrome</b></span></span></li>
+        <li><span>اضغط <b>تثبيت</b> عند ظهورها، أو من قائمة ⋮ اختر <b>«تثبيت التطبيق»</b><span class="en">Tap <b>Install</b>, or ⋮ menu → <b>Install app</b></span></span></li>
+      </ol>
+    </div>
+  </div>
+
+  <div class="foot">
+    لا يُرسل أي بيان إلى أي خادم — كل شيء يُحفظ على جهازك
+    <span class="en">Nothing is sent to any server — everything stays on your device</span>
+  </div>
+</div>
+</body>
+</html>
