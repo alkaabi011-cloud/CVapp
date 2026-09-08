@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl"><head><meta charset="utf-8">
+<title>Template gallery (dev)</title>
+<style>
+ body{margin:0;background:#eef0f7;font-family:system-ui,sans-serif;padding:16px}
+ h2{font-size:13px;margin:0 0 6px;color:#333}
+ .g{display:grid;grid-template-columns:repeat(4,1fr);gap:14px}
+ .c{background:#fff;box-shadow:0 2px 10px rgba(0,0,0,.14)}
+ iframe{width:794px;height:1123px;border:0;transform:scale(.32);transform-origin:top right;display:block}
+ .c{width:254px;height:359px;overflow:hidden}
+ html[dir=ltr] iframe{transform-origin:top left}
+</style></head><body>
+<div id="out"></div>
+<script src="../js/i18n.js"></script>
+<script src="../js/templates.js"></script>
+<script>
+const sample = {
+  accent:'#2563eb', photo:null, docDir:'rtl',
+  personal:{fullName:'ماثيو روبنسون',jobTitle:'مدير مكتب',email:'matrobison@gmail.com',
+    phone:'(123) 456 7895',address:'٤٥ شارع بوه بير',city:'تشارلستون',country:'أمريكا',
+    linkedin:'linkedin.com/in/mrobinson',website:'mrobinson.dev',dob:'1991',nationality:'أمريكي'},
+  objective:'أسعى إلى فرص تتيح لي توظيف مهاراتي بالكامل في خدمة نجاح المؤسسة، مع خبرة تمتد لأكثر من ست سنوات في إدارة العمليات المكتبية.',
+  objectiveTitle:'الهدف الوظيفي',
+  settings:{fontFamily:'cairo',fontSize:10.2,nameSize:26,headingSize:11.6,lineHeight:1.55,
+    sectionGap:14,paper:'a4',margin:'normal',showPhoto:true,showIcons:true,upper:false},
+  sections:[
+   {id:'a',type:'experience',titleKey:'sec_experience',title:null,visible:true,items:[
+     {position:'مدير مكتب',company:'Express Inc.',location:'سان خوسيه',start:'2016',end:'',current:true,
+      desc:'• أدرت الجداول والعمليات اليومية لمكتب يضم ٥٠ موظفاً\n• خفّضت المصروفات بمقدار ٣٥ ألف دولار\n• طبّقت نظام جرد وأتمتت الطلبات'},
+     {position:'مساعد إداري',company:'Simple Functions',location:'فريزنو',start:'2012',end:'2016',current:false,
+      desc:'• أعددت التقارير الدورية\n• حدّثت تقويم المواعيد'}]},
+   {id:'b',type:'education',titleKey:'sec_education',title:null,visible:true,items:[
+     {degree:'بكالوريوس إدارة أعمال',school:'جامعة برينستون',location:'',start:'',end:'2013',grade:'4.0',current:false,desc:''},
+     {degree:'دبلوم محاسبة',school:'جامعة برينستون',location:'',start:'',end:'2011',grade:'3.5',current:false,desc:''}]},
+   {id:'c',type:'skills',titleKey:'sec_skills',title:null,visible:true,items:[
+     {name:'حزمة أوفيس',level:95},{name:'أنظمة إدارة العملاء',level:88},
+     {name:'MySQL / Photoshop',level:74},{name:'التحليل والتقييم',level:82},{name:'إعداد الميزانيات',level:80}]},
+   {id:'d',type:'languages',titleKey:'sec_languages',title:null,visible:true,items:[
+     {name:'العربية',level:'native'},{name:'الإنجليزية',level:'fluent'},{name:'الفرنسية',level:'intermediate'}]},
+   {id:'e',type:'certifications',titleKey:'sec_certifications',title:null,visible:true,items:[
+     {name:'مدير مرافق معتمد',issuer:'IFMA',date:'2017',credId:'IFMA-2017-8841'}]},
+   {id:'f',type:'references',titleKey:'sec_references',title:null,visible:true,items:[
+     {name:'Evan Rightworth',position:'مدير العمليات',company:'Wal-mart',email:'erightworth@walmart.com',phone:'314-999-1234'}]}
+  ]
+};
+// a small drawn avatar so photo templates are exercised
+const cvs=document.createElement('canvas');cvs.width=cvs.height=200;
+const x=cvs.getContext('2d');x.fillStyle='#c7d2fe';x.fillRect(0,0,200,200);
+x.fillStyle='#6366f1';x.beginPath();x.arc(100,78,38,0,7);x.fill();
+x.beginPath();x.arc(100,215,72,Math.PI,0);x.fill();
+sample.photo=cvs.toDataURL('image/jpeg',0.8);
+
+const out=document.getElementById('out');
+['modern','professional','creative','minimal'].forEach(cat=>{
+  const secs=TEMPLATES.filter(t=>t.cat===cat);
+  const h=document.createElement('div');
+  h.innerHTML=`<h2>${cat.toUpperCase()}</h2><div class="g">${secs.map(t=>
+    `<div><div class="c"><iframe data-id="${t.id}"></iframe></div>
+     <div style="font-size:11px;padding:4px 2px">${t.name.ar} · ${t.id}</div></div>`).join('')}</div>`;
+  out.appendChild(h);
+});
+document.querySelectorAll('iframe[data-id]').forEach(f=>{
+  f.srcdoc = renderCV(sample, f.dataset.id, I18N.ar);
+});
+</script></body></html>

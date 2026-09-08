@@ -1,0 +1,367 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover, maximum-scale=5">
+<meta name="theme-color" content="#6d28d9">
+<meta name="description" content="منشئ السيرة الذاتية — CV Builder PWA">
+<title>منشئ السيرة الذاتية | CV Builder</title>
+
+<link rel="manifest" href="manifest.json">
+<link rel="icon" href="icons/icon.svg" type="image/svg+xml">
+<link rel="apple-touch-icon" sizes="180x180" href="icons/apple-touch-icon.png">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="mobile-web-app-capable" content="yes">
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<!-- All six CV font options live here too: the live template thumbnails render in
+     shadow roots, which inherit fonts from this document rather than @import-ing
+     their own. Faces are only downloaded if a template actually uses them. -->
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;600;700;900&family=Tajawal:wght@300;400;500;700;900&family=Noto+Kufi+Arabic:wght@300;400;600;700;900&family=Amiri:wght@400;700&family=Inter:wght@300;400;500;600;700;900&display=swap">
+<link rel="stylesheet" href="css/styles.css">
+</head>
+<body>
+
+<!-- ══════════ SPLASH ══════════ -->
+<div id="splash" class="splash">
+  <div class="splash-orb"></div>
+  <svg class="splash-mark" viewBox="0 0 64 64" aria-hidden="true">
+    <rect x="12" y="6" width="40" height="52" rx="6" fill="rgba(255,255,255,.16)"/>
+    <rect x="19" y="16" width="18" height="4" rx="2" fill="#fff"/>
+    <rect x="19" y="26" width="26" height="3" rx="1.5" fill="rgba(255,255,255,.7)"/>
+    <rect x="19" y="34" width="26" height="3" rx="1.5" fill="rgba(255,255,255,.7)"/>
+    <rect x="19" y="42" width="16" height="3" rx="1.5" fill="rgba(255,255,255,.45)"/>
+  </svg>
+  <div class="splash-title" data-i18n="app_name">منشئ السيرة الذاتية</div>
+  <div class="splash-bar"><i></i></div>
+</div>
+
+<!-- ══════════ TOP BAR ══════════ -->
+<header class="topbar" id="topbar">
+  <button class="icon-btn" id="btnBack" hidden aria-label="back">
+    <svg viewBox="0 0 24 24" class="i-back"><path d="M15 5l-7 7 7 7" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+  </button>
+  <div class="brand">
+    <div class="brand-mark">
+      <svg viewBox="0 0 24 24"><path d="M6 3h9l5 5v13a1 1 0 0 1-1 1H6a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1z" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round"/><path d="M14 3v6h6M8.5 13h7M8.5 17h4.5" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"/></svg>
+    </div>
+    <div class="brand-txt">
+      <strong id="viewTitle" data-i18n="app_name">منشئ السيرة الذاتية</strong>
+      <small id="viewSub" data-i18n="app_tag">ابنِ سيرتك في دقائق</small>
+    </div>
+  </div>
+  <div class="topbar-actions">
+    <button class="icon-btn" id="btnLang" title="Language"><span id="langLabel">EN</span></button>
+    <button class="icon-btn" id="btnTheme" aria-label="theme">
+      <svg viewBox="0 0 24 24" class="i-sun"><circle cx="12" cy="12" r="4.2" fill="none" stroke="currentColor" stroke-width="1.8"/><path d="M12 2.5v2.2M12 19.3v2.2M2.5 12h2.2M19.3 12h2.2M5.2 5.2l1.6 1.6M17.2 17.2l1.6 1.6M18.8 5.2l-1.6 1.6M6.8 17.2l-1.6 1.6" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>
+      <svg viewBox="0 0 24 24" class="i-moon"><path d="M20 14.5A8.5 8.5 0 0 1 9.5 4a8.5 8.5 0 1 0 10.5 10.5z" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/></svg>
+    </button>
+  </div>
+</header>
+
+<div class="save-pill" id="savePill" aria-live="polite"></div>
+
+<!-- ══════════ MAIN ══════════ -->
+<main id="main">
+
+<!-- ─── HOME ─── -->
+<section class="view view-home is-active" id="view-home">
+  <div class="hero">
+    <div class="hero-bg"></div>
+    <div class="hero-inner">
+      <div class="hero-badge"><span class="dot"></span><span data-i18n="offline_ready">يعمل بدون إنترنت</span></div>
+      <h1 data-i18n="hero_title">سيرة ذاتية احترافية<br>في دقائق معدودة</h1>
+      <p data-i18n="hero_sub">أدخل بياناتك مرة واحدة، واختر من ١٤ قالباً — البيانات تبقى، الشكل يتغيّر.</p>
+      <div class="hero-cta">
+        <button class="btn btn-primary btn-lg" data-go="builder">
+          <svg viewBox="0 0 24 24"><path d="M12 5v14M5 12h14" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" fill="none"/></svg>
+          <span data-i18n="start_building">ابدأ الآن</span>
+        </button>
+        <button class="btn btn-ghost btn-lg" data-go="templates">
+          <svg viewBox="0 0 24 24"><rect x="3.5" y="3.5" width="7" height="9" rx="1.6" fill="none" stroke="currentColor" stroke-width="1.8"/><rect x="13.5" y="3.5" width="7" height="6" rx="1.6" fill="none" stroke="currentColor" stroke-width="1.8"/><rect x="3.5" y="15.5" width="7" height="5" rx="1.6" fill="none" stroke="currentColor" stroke-width="1.8"/><rect x="13.5" y="12.5" width="7" height="8" rx="1.6" fill="none" stroke="currentColor" stroke-width="1.8"/></svg>
+          <span data-i18n="browse_templates">تصفّح القوالب</span>
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <div class="wrap">
+    <div class="progress-card" id="progressCard">
+      <div class="pc-head">
+        <div>
+          <h3 data-i18n="completeness">اكتمال السيرة</h3>
+          <small id="pcHint"></small>
+        </div>
+        <div class="ring" id="ring">
+          <svg viewBox="0 0 44 44"><circle cx="22" cy="22" r="19" class="ring-bg"/><circle cx="22" cy="22" r="19" class="ring-fg" id="ringFg"/></svg>
+          <b id="ringPct">0%</b>
+        </div>
+      </div>
+      <div class="pc-chips" id="pcChips"></div>
+    </div>
+
+    <h2 class="sec-title" data-i18n="quick_actions">إجراءات سريعة</h2>
+    <div class="tiles">
+      <button class="tile" data-go="builder">
+        <span class="tile-ic ic-a"><svg viewBox="0 0 24 24"><path d="M4 20h4l10-10-4-4L4 16v4z" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/><path d="M13.5 6.5l4 4" stroke="currentColor" stroke-width="1.8"/></svg></span>
+        <b data-i18n="nav_builder">تعبئة البيانات</b><small data-i18n="tile_builder">الخبرات، التعليم، المهارات</small>
+      </button>
+      <button class="tile" data-go="templates">
+        <span class="tile-ic ic-b"><svg viewBox="0 0 24 24"><rect x="4" y="4" width="16" height="16" rx="2.5" fill="none" stroke="currentColor" stroke-width="1.8"/><path d="M4 9h16M9 9v11" stroke="currentColor" stroke-width="1.8"/></svg></span>
+        <b data-i18n="nav_templates">القوالب</b><small data-i18n="tile_templates">١٤ تصميماً احترافياً</small>
+      </button>
+      <button class="tile" data-go="preview">
+        <span class="tile-ic ic-c"><svg viewBox="0 0 24 24"><path d="M2.5 12S6 5.5 12 5.5 21.5 12 21.5 12 18 18.5 12 18.5 2.5 12 2.5 12z" fill="none" stroke="currentColor" stroke-width="1.8"/><circle cx="12" cy="12" r="3" fill="none" stroke="currentColor" stroke-width="1.8"/></svg></span>
+        <b data-i18n="nav_preview">معاينة وتصدير</b><small data-i18n="tile_preview">PDF · طباعة · مشاركة</small>
+      </button>
+      <button class="tile" data-go="settings">
+        <span class="tile-ic ic-d"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="3" fill="none" stroke="currentColor" stroke-width="1.8"/><path d="M12 2.8v2.4M12 18.8v2.4M21.2 12h-2.4M5.2 12H2.8M18.5 5.5l-1.7 1.7M7.2 16.8l-1.7 1.7M18.5 18.5l-1.7-1.7M7.2 7.2L5.5 5.5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg></span>
+        <b data-i18n="nav_settings">الإعدادات</b><small data-i18n="tile_settings">الخط، الحجم، النسخ الاحتياطي</small>
+      </button>
+    </div>
+
+    <h2 class="sec-title" data-i18n="recent_templates">قوالب مقترحة</h2>
+    <div class="rail" id="homeRail"></div>
+    <div class="spacer-nav"></div>
+  </div>
+</section>
+
+<!-- ─── BUILDER ─── -->
+<section class="view view-builder" id="view-builder">
+  <div class="wrap">
+    <div class="builder-head">
+      <h2 data-i18n="nav_builder">تعبئة البيانات</h2>
+      <button class="btn btn-soft btn-sm" id="btnAddSection">
+        <svg viewBox="0 0 24 24"><path d="M12 5v14M5 12h14" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" fill="none"/></svg>
+        <span data-i18n="add_section">إضافة قسم</span>
+      </button>
+    </div>
+
+    <!-- Personal -->
+    <details class="panel" open data-panel="personal">
+      <summary>
+        <span class="p-ic"><svg viewBox="0 0 24 24"><circle cx="12" cy="8" r="3.6" fill="none" stroke="currentColor" stroke-width="1.8"/><path d="M4.5 20c.6-4 3.7-6 7.5-6s6.9 2 7.5 6" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg></span>
+        <b data-i18n="sec_personal">البيانات الشخصية</b>
+        <span class="p-count" id="cntPersonal"></span>
+        <svg class="chev" viewBox="0 0 24 24"><path d="M6 9l6 6 6-6" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      </summary>
+      <div class="panel-body">
+        <div class="photo-row">
+          <div class="photo-box" id="photoBox">
+            <img id="photoImg" alt="" hidden>
+            <span class="photo-ph"><svg viewBox="0 0 24 24"><circle cx="12" cy="9" r="3.4" fill="none" stroke="currentColor" stroke-width="1.6"/><path d="M5 19.5c.6-3.6 3.4-5.4 7-5.4s6.4 1.8 7 5.4" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg></span>
+          </div>
+          <div class="photo-actions">
+            <button class="btn btn-soft btn-sm" id="btnPhoto" data-i18n="upload_photo">رفع صورة</button>
+            <button class="btn btn-quiet btn-sm" id="btnPhotoDel" data-i18n="remove">حذف</button>
+            <small data-i18n="photo_hint">اختيارية — بعض القوالب تعرضها</small>
+          </div>
+          <input type="file" id="photoInput" accept="image/*" hidden>
+        </div>
+        <div class="grid-2" id="personalGrid"></div>
+      </div>
+    </details>
+
+    <!-- Objective -->
+    <details class="panel" data-panel="objective">
+      <summary>
+        <span class="p-ic"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="8" fill="none" stroke="currentColor" stroke-width="1.8"/><circle cx="12" cy="12" r="3.4" fill="none" stroke="currentColor" stroke-width="1.8"/></svg></span>
+        <b data-i18n="sec_objective">الهدف الوظيفي</b>
+        <span class="p-count" id="cntObjective"></span>
+        <svg class="chev" viewBox="0 0 24 24"><path d="M6 9l6 6 6-6" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      </summary>
+      <div class="panel-body">
+        <div class="field">
+          <textarea id="objectiveInput" rows="4" data-ph="ph_objective"></textarea>
+          <div class="field-foot">
+            <button class="chip-btn" id="btnObjSuggest" data-i18n="suggestions">اقتراحات جاهزة</button>
+            <span class="counter" id="objCounter">0</span>
+          </div>
+        </div>
+        <div class="suggest-list" id="objSuggestions" hidden></div>
+      </div>
+    </details>
+
+    <!-- Dynamic sections -->
+    <div id="dynSections"></div>
+    <div class="spacer-nav"></div>
+  </div>
+</section>
+
+<!-- ─── TEMPLATES ─── -->
+<section class="view view-templates" id="view-templates">
+  <div class="wrap">
+    <div class="tpl-filter" id="tplFilter">
+      <button class="fchip is-on" data-cat="all" data-i18n="cat_all">الكل</button>
+      <button class="fchip" data-cat="modern" data-i18n="cat_modern">عصري</button>
+      <button class="fchip" data-cat="professional" data-i18n="cat_pro">احترافي</button>
+      <button class="fchip" data-cat="creative" data-i18n="cat_creative">إبداعي</button>
+      <button class="fchip" data-cat="minimal" data-i18n="cat_minimal">بسيط</button>
+    </div>
+    <div class="color-strip">
+      <span data-i18n="accent_color">لون التمييز</span>
+      <div class="swatches" id="swatches"></div>
+    </div>
+    <div class="tpl-grid" id="tplGrid"></div>
+    <div class="spacer-nav"></div>
+  </div>
+</section>
+
+<!-- ─── PREVIEW ─── -->
+<section class="view view-preview" id="view-preview">
+  <div class="pv-toolbar">
+    <div class="pv-tools-scroll">
+      <button class="tool" id="btnZoomOut" aria-label="zoom out"><svg viewBox="0 0 24 24"><path d="M5 12h14" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"/></svg></button>
+      <span class="zoom-val" id="zoomVal">100%</span>
+      <button class="tool" id="btnZoomIn" aria-label="zoom in"><svg viewBox="0 0 24 24"><path d="M12 5v14M5 12h14" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"/></svg></button>
+      <span class="tool-sep"></span>
+      <button class="tool tool-wide" id="btnTplQuick">
+        <svg viewBox="0 0 24 24"><rect x="4" y="4" width="16" height="16" rx="2.5" fill="none" stroke="currentColor" stroke-width="1.8"/><path d="M4 9h16" stroke="currentColor" stroke-width="1.8"/></svg>
+        <span id="quickTplName">—</span>
+      </button>
+      <span class="tool-sep"></span>
+      <button class="tool tool-wide" id="btnFormat">
+        <svg viewBox="0 0 24 24"><path d="M4 7h16M4 12h11M4 17h7" stroke="currentColor" stroke-width="1.9" stroke-linecap="round"/></svg>
+        <span data-i18n="format">تنسيق</span>
+      </button>
+      <button class="tool tool-wide tool-accent" id="btnExport">
+        <svg viewBox="0 0 24 24"><path d="M12 3v11M8 10.5l4 4 4-4" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><path d="M4.5 17.5V20h15v-2.5" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+        <span data-i18n="export">تصدير</span>
+      </button>
+    </div>
+  </div>
+  <div class="pv-stage" id="pvStage">
+    <div class="pv-paper" id="pvPaper">
+      <iframe id="pvFrame" title="CV preview"></iframe>
+    </div>
+    <div class="pv-empty" id="pvEmpty" hidden>
+      <div class="pv-empty-art">
+        <svg viewBox="0 0 120 140" aria-hidden="true">
+          <rect x="14" y="8" width="92" height="124" rx="8" class="pe-page"/>
+          <rect x="28" y="26" width="34" height="34" rx="17" class="pe-soft"/>
+          <rect x="70" y="32" width="26" height="6" rx="3" class="pe-soft"/>
+          <rect x="70" y="44" width="18" height="5" rx="2.5" class="pe-soft"/>
+          <rect x="28" y="72" width="64" height="6" rx="3" class="pe-line"/>
+          <rect x="28" y="86" width="52" height="6" rx="3" class="pe-line"/>
+          <rect x="28" y="100" width="58" height="6" rx="3" class="pe-line"/>
+          <rect x="28" y="114" width="34" height="6" rx="3" class="pe-line"/>
+          <circle cx="92" cy="112" r="21" class="pe-badge"/>
+          <path d="M92 103v18M83 112h18" class="pe-plus"/>
+        </svg>
+      </div>
+      <h3 data-i18n="preview_empty_title">لا توجد بيانات لعرضها بعد</h3>
+      <p data-i18n="preview_empty_sub">أضف اسمك وخبراتك، وستظهر سيرتك هنا مباشرةً أثناء الكتابة.</p>
+      <button class="btn btn-brand btn-lg" data-go="builder">
+        <svg viewBox="0 0 24 24"><path d="M12 5v14M5 12h14" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" fill="none"/></svg>
+        <span data-i18n="go_fill">ابدأ بتعبئة البيانات</span>
+      </button>
+      <button class="chip-btn pe-sample" id="btnSampleFromPreview" data-i18n="load_sample">تعبئة ببيانات تجريبية</button>
+    </div>
+  </div>
+</section>
+
+<!-- ─── SETTINGS ─── -->
+<section class="view view-settings" id="view-settings">
+  <div class="wrap">
+    <h2 class="sec-title" data-i18n="doc_format">تنسيق المستند</h2>
+    <div class="card" id="formatCard"></div>
+
+    <h2 class="sec-title" data-i18n="data_backup">البيانات والنسخ الاحتياطي</h2>
+    <div class="card list-card">
+      <button class="row-btn" id="btnExportJson">
+        <span class="rb-ic"><svg viewBox="0 0 24 24"><path d="M12 3v11M8 10.5l4 4 4-4" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><path d="M4.5 17.5V20h15v-2.5" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg></span>
+        <span class="rb-txt"><b data-i18n="export_data">تصدير البيانات</b><small data-i18n="export_data_sub">ملف JSON يحتوي كل شيء</small></span>
+      </button>
+      <button class="row-btn" id="btnImportJson">
+        <span class="rb-ic"><svg viewBox="0 0 24 24"><path d="M12 14V3M8 6.5l4-4 4 4" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><path d="M4.5 17.5V20h15v-2.5" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg></span>
+        <span class="rb-txt"><b data-i18n="import_data">استيراد البيانات</b><small data-i18n="import_data_sub">استعادة من ملف JSON</small></span>
+      </button>
+      <button class="row-btn" id="btnSample">
+        <span class="rb-ic"><svg viewBox="0 0 24 24"><path d="M12 3l2.4 5.6 6.1.5-4.6 4 1.4 6-5.3-3.2L6.7 19l1.4-6-4.6-4 6.1-.5L12 3z" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round"/></svg></span>
+        <span class="rb-txt"><b data-i18n="load_sample">تعبئة ببيانات تجريبية</b><small data-i18n="load_sample_sub">لتجربة القوالب بسرعة</small></span>
+      </button>
+      <button class="row-btn danger" id="btnReset">
+        <span class="rb-ic"><svg viewBox="0 0 24 24"><path d="M5 7h14M9.5 7V5h5v2M7 7l.8 12.2A1 1 0 0 0 8.8 20h6.4a1 1 0 0 0 1-0.8L17 7" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+        <span class="rb-txt"><b data-i18n="reset_all">مسح كل البيانات</b><small data-i18n="reset_all_sub">لا يمكن التراجع</small></span>
+      </button>
+    </div>
+
+    <h2 class="sec-title" data-i18n="about">عن التطبيق</h2>
+    <div class="card about-card">
+      <p data-i18n="about_body">تطبيق ويب تقدّمي (PWA) يعمل بالكامل على جهازك. لا يُرسل أي بيان إلى أي خادم — كل شيء يُحفظ محلياً في متصفحك.</p>
+      <div class="about-meta">
+        <span><b data-i18n="storage_used">المساحة</b><i id="storageVal">—</i></span>
+        <span><b data-i18n="version">الإصدار</b><i>1.0.0</i></span>
+        <span><b data-i18n="status">الحالة</b><i id="swStatus">—</i></span>
+      </div>
+      <button class="btn btn-soft btn-block" id="btnInstall" hidden data-i18n="install_app">تثبيت التطبيق على الجهاز</button>
+
+      <!-- iOS Safari never fires beforeinstallprompt, so the button above can
+           never appear there. Show the manual route instead. -->
+      <div class="ios-install" id="iosInstall" hidden>
+        <b data-i18n="ios_install_title">تثبيت التطبيق على الآيفون</b>
+        <ol>
+          <li>
+            <span class="ios-ic"><svg viewBox="0 0 24 24"><path d="M12 15.5V3.5M8.5 7l3.5-3.5L15.5 7" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"/><path d="M6 11.5H5a1 1 0 0 0-1 1v7a1 1 0 0 0 1 1h14a1 1 0 0 0 1-1v-7a1 1 0 0 0-1-1h-1" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round"/></svg></span>
+            <span data-i18n="ios_step1">اضغط زر المشاركة في شريط Safari بالأسفل</span>
+          </li>
+          <li>
+            <span class="ios-ic"><svg viewBox="0 0 24 24"><rect x="4" y="4" width="16" height="16" rx="4" fill="none" stroke="currentColor" stroke-width="1.9"/><path d="M12 8.5v7M8.5 12h7" stroke="currentColor" stroke-width="1.9" stroke-linecap="round"/></svg></span>
+            <span data-i18n="ios_step2">اختر «إضافة إلى الشاشة الرئيسية»</span>
+          </li>
+          <li>
+            <span class="ios-ic"><svg viewBox="0 0 24 24"><path d="M5 12.5l4.5 4.5L19 7.5" fill="none" stroke="currentColor" stroke-width="2.1" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+            <span data-i18n="ios_step3">اضغط «إضافة» — وسيعمل بعدها دون إنترنت</span>
+          </li>
+        </ol>
+      </div>
+    </div>
+    <div class="spacer-nav"></div>
+  </div>
+</section>
+
+</main>
+
+<!-- ══════════ BOTTOM NAV ══════════ -->
+<nav class="tabbar" id="tabbar">
+  <button class="tab is-on" data-go="home">
+    <svg viewBox="0 0 24 24"><path d="M4 10.5L12 4l8 6.5V20a1 1 0 0 1-1 1h-4v-6H9v6H5a1 1 0 0 1-1-1v-9.5z" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/></svg>
+    <span data-i18n="nav_home">الرئيسية</span>
+  </button>
+  <button class="tab" data-go="builder">
+    <svg viewBox="0 0 24 24"><path d="M4 20h4l10-10-4-4L4 16v4z" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/><path d="M13.5 6.5l4 4" stroke="currentColor" stroke-width="1.8"/></svg>
+    <span data-i18n="nav_builder_s">البيانات</span>
+  </button>
+  <button class="tab" data-go="templates">
+    <svg viewBox="0 0 24 24"><rect x="4" y="4" width="16" height="16" rx="2.5" fill="none" stroke="currentColor" stroke-width="1.8"/><path d="M4 9h16M9 9v11" stroke="currentColor" stroke-width="1.8"/></svg>
+    <span data-i18n="nav_templates">القوالب</span>
+  </button>
+  <button class="tab" data-go="preview">
+    <svg viewBox="0 0 24 24"><path d="M2.5 12S6 5.5 12 5.5 21.5 12 21.5 12 18 18.5 12 18.5 2.5 12 2.5 12z" fill="none" stroke="currentColor" stroke-width="1.8"/><circle cx="12" cy="12" r="3" fill="none" stroke="currentColor" stroke-width="1.8"/></svg>
+    <span data-i18n="nav_preview_s">معاينة</span>
+  </button>
+  <button class="tab" data-go="settings">
+    <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="3" fill="none" stroke="currentColor" stroke-width="1.8"/><path d="M12 2.8v2.4M12 18.8v2.4M21.2 12h-2.4M5.2 12H2.8M18.5 5.5l-1.7 1.7M7.2 16.8l-1.7 1.7M18.5 18.5l-1.7-1.7M7.2 7.2L5.5 5.5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>
+    <span data-i18n="nav_settings_s">إعدادات</span>
+  </button>
+  <i class="tab-ink" id="tabInk"></i>
+</nav>
+
+<!-- ══════════ SHEET ══════════ -->
+<div class="sheet-scrim" id="sheetScrim"></div>
+<div class="sheet" id="sheet" role="dialog" aria-modal="true">
+  <div class="sheet-grip"></div>
+  <div class="sheet-head"><h3 id="sheetTitle"></h3><button class="icon-btn" id="sheetClose" aria-label="close"><svg viewBox="0 0 24 24"><path d="M6 6l12 12M18 6L6 18" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg></button></div>
+  <div class="sheet-body" id="sheetBody"></div>
+</div>
+
+<div class="toast" id="toast"></div>
+<input type="file" id="importInput" accept="application/json,.json" hidden>
+
+<script src="js/i18n.js"></script>
+<script src="js/templates.js"></script>
+<script src="js/app.js"></script>
+</body>
+</html>
