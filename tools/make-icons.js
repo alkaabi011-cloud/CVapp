@@ -21,14 +21,26 @@ function chunk(type, data){
   const crc = Buffer.alloc(4); crc.writeUInt32BE(crc32(td));
   return Buffer.concat([len, td, crc]);
 }
-function png(w, h, rgba){
+/* `rgb: true` writes colour type 2 (no alpha channel at all). The App Store
+   rejects icons that carry an alpha channel even when every pixel is opaque,
+   so store artwork must be encoded this way, not merely made fully opaque. */
+function png(w, h, rgba, rgb=false){
+  const bpp = rgb ? 3 : 4;
   const ihdr = Buffer.alloc(13);
   ihdr.writeUInt32BE(w,0); ihdr.writeUInt32BE(h,4);
-  ihdr[8]=8; ihdr[9]=6; ihdr[10]=0; ihdr[11]=0; ihdr[12]=0;   // 8-bit RGBA
-  const raw = Buffer.alloc((w*4+1)*h);
+  ihdr[8]=8; ihdr[9]= rgb ? 2 : 6; ihdr[10]=0; ihdr[11]=0; ihdr[12]=0;
+  const stride = w*bpp+1;
+  const raw = Buffer.alloc(stride*h);
   for(let y=0;y<h;y++){
-    raw[y*(w*4+1)] = 0;                                        // filter: none
-    rgba.copy(raw, y*(w*4+1)+1, y*w*4, (y+1)*w*4);
+    raw[y*stride] = 0;                                         // filter: none
+    if(rgb){
+      for(let x=0;x<w;x++){
+        const s=(y*w+x)*4, d=y*stride+1+x*3;
+        raw[d]=rgba[s]; raw[d+1]=rgba[s+1]; raw[d+2]=rgba[s+2];
+      }
+    } else {
+      rgba.copy(raw, y*stride+1, y*w*4, (y+1)*w*4);
+    }
   }
   return Buffer.concat([
     Buffer.from([0x89,0x50,0x4E,0x47,0x0D,0x0A,0x1A,0x0A]),
@@ -88,11 +100,11 @@ function canvas(size){
       }
     }
   };
-  return { px, rrect, circle, bg, out:()=>png(size,size,px) };
+  return { px, rrect, circle, bg, out:(rgb)=>png(size,size,px,rgb) };
 }
 
 /* ---- the mark: a document with lines, on the brand gradient ---- */
-function icon(size, { maskable=false, apple=false } = {}){
+function icon(size, { maskable=false, apple=false, rgb=false } = {}){
   const c = canvas(size);
   const u = size/64;                       // design grid = 64
   // iOS applies its own superellipse mask to apple-touch-icon, so this one must
@@ -124,13 +136,16 @@ function icon(size, { maskable=false, apple=false } = {}){
   });
   const [gx,gy]=P(22.5,49.6);
   c.rrect(gx,gy,D(11),D(2.6),D(1.3),[219,39,119,255]);               // accent bar
-  return c.out();
+  return c.out(rgb);
 }
 
 fs.writeFileSync(path.join(OUT,'icon-192.png'), icon(192));
 fs.writeFileSync(path.join(OUT,'icon-512.png'), icon(512));
 fs.writeFileSync(path.join(OUT,'icon-maskable-512.png'), icon(512,{maskable:true}));
 fs.writeFileSync(path.join(OUT,'apple-touch-icon.png'), icon(180,{apple:true}));
+// App Store / Play Store / Median upload: 1024px, square, fully opaque.
+// Apple rejects icons with an alpha channel and applies its own corner mask.
+fs.writeFileSync(path.join(OUT,'store-icon-1024.png'), icon(1024,{apple:true,rgb:true}));
 
 /* ---- matching SVG (crisp at any size, used for the tab icon) ---- */
 fs.writeFileSync(path.join(OUT,'icon.svg'), `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64">
