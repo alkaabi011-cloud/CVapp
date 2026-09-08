@@ -896,7 +896,10 @@ if('serviceWorker' in navigator){
   });
 }
 let deferredPrompt=null;
-addEventListener('beforeinstallprompt', e=>{ e.preventDefault(); deferredPrompt=e; $('#btnInstall').hidden=false; });
+addEventListener('beforeinstallprompt', e=>{
+  if(IS_NATIVE_WRAPPER) return;            // already a native app; nothing to install
+  e.preventDefault(); deferredPrompt=e; $('#btnInstall').hidden=false;
+});
 
 /* iOS Safari implements neither beforeinstallprompt nor appinstalled, so the
    install button can never appear there. Detect iOS-not-yet-installed and show
@@ -904,7 +907,16 @@ addEventListener('beforeinstallprompt', e=>{ e.preventDefault(); deferredPrompt=
    hence the touch-points check. */
 const IS_IOS = /iphone|ipad|ipod/i.test(navigator.userAgent) ||
                (navigator.platform==='MacIntel' && navigator.maxTouchPoints>1);
-const IS_STANDALONE = matchMedia('(display-mode: standalone)').matches || navigator.standalone===true;
+
+/* Wrapped in a native shell (Median / GoNative), the app is already installed,
+   but a WKWebView reports neither display-mode:standalone nor
+   navigator.standalone — so without this check we would show "Add to Home
+   Screen" instructions inside an installed app. */
+const IS_NATIVE_WRAPPER = /median|gonative/i.test(navigator.userAgent) ||
+                          !!window.median || !!window.gonative;
+const IS_STANDALONE = matchMedia('(display-mode: standalone)').matches ||
+                      navigator.standalone===true || IS_NATIVE_WRAPPER;
+
 if(IS_IOS && !IS_STANDALONE) $('#iosInstall').hidden = false;
 $('#btnInstall').onclick = async ()=>{
   if(!deferredPrompt) return;

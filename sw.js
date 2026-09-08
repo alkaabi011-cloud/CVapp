@@ -14,7 +14,7 @@
    ═══════════════════════════════════════════════════════════════ */
 
 // Bump this on every release — it is what retires the old caches.
-const VERSION    = 'v1.0.4';
+const VERSION    = 'v1.0.5';
 const SHELL      = `cvb-shell-${VERSION}`;
 const FONTS      = `cvb-fonts-${VERSION}`;
 

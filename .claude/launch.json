@@ -1,0 +1,11 @@
+{
+  "version": "0.0.1",
+  "configurations": [
+    {
+      "name": "cvapp",
+      "runtimeExecutable": "python",
+      "runtimeArgs": ["-m", "http.server", "5610", "--directory", "."],
+      "port": 5610
+    }
+  ]
+}
