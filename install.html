@@ -48,7 +48,9 @@ li::before{content:counter(s);flex:none;width:23px;height:23px;border-radius:50%
 li b{color:var(--ink);font-weight:700}
 .foot{padding:16px 24px 22px;border-top:1px solid var(--line);text-align:center;
   font-size:11.5px;color:var(--mut)}
-.en{direction:ltr;text-align:left;font-size:12px;opacity:.85;margin-top:5px}
+/* block, or the English runs on inline with the Arabic sentence before it */
+.en{display:block;direction:ltr;text-align:left;font-size:12px;opacity:.8;margin-top:3px}
+html[dir="rtl"] li .en,html[dir="rtl"] .hint .en{text-align:left}
 @media print{
   body{background:#fff;padding:0}
   .card{box-shadow:none;border:0;max-width:100%}
