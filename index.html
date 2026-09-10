@@ -288,9 +288,25 @@
       </button>
     </div>
 
+    <h2 class="sec-title" data-i18n="voice_section">المساعد الصوتي</h2>
+    <div class="card voice-card">
+      <div class="vc-head">
+        <span class="vc-orb" id="vcOrb">
+          <svg viewBox="0 0 24 24"><path d="M12 3.5a3 3 0 0 1 3 3v5a3 3 0 0 1-6 0v-5a3 3 0 0 1 3-3z" fill="none" stroke="currentColor" stroke-width="1.8"/><path d="M5.5 11a6.5 6.5 0 0 0 13 0M12 17.5V21" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>
+        </span>
+        <div class="vc-txt">
+          <b data-i18n="voice_title">تحدّث لبناء سيرتك</b>
+          <small data-i18n="voice_sub">مساعد صوتي يسألك ويساعدك على صياغة سيرتك</small>
+        </div>
+      </div>
+      <p class="vc-note" data-i18n="voice_privacy">يتطلب اتصالاً بالإنترنت. عند تشغيله يُرسَل صوتك إلى ElevenLabs لمعالجته — بيانات سيرتك نفسها تبقى على جهازك.</p>
+      <button class="btn btn-brand btn-block" id="btnVoice" data-i18n="voice_start">تشغيل المساعد الصوتي</button>
+      <div class="vc-status" id="vcStatus" hidden></div>
+    </div>
+
     <h2 class="sec-title" data-i18n="about">عن التطبيق</h2>
     <div class="card about-card">
-      <p data-i18n="about_body">تطبيق ويب تقدّمي (PWA) يعمل بالكامل على جهازك. لا يُرسل أي بيان إلى أي خادم — كل شيء يُحفظ محلياً في متصفحك.</p>
+      <p data-i18n="about_body">تطبيق ويب تقدّمي (PWA). بيانات سيرتك الذاتية تُحفظ محلياً في متصفحك ولا تُرسَل إلى أي خادم. الاستثناء الوحيد هو المساعد الصوتي الاختياري: أثناء تشغيله يُرسَل صوتك إلى ElevenLabs لمعالجته.</p>
       <div class="about-meta">
         <span><b data-i18n="storage_used">المساحة</b><i id="storageVal">—</i></span>
         <span><b data-i18n="version">الإصدار</b><i>1.0.0</i></span>

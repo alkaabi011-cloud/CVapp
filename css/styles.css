@@ -593,6 +593,41 @@ html[dir="rtl"] .field select{background-position:left 12px center}
   .install-banner{inset-inline-start:auto;inset-inline-end:20px;inset-block-end:20px;width:360px}
 }
 
+
+/* ═══════ VOICE ASSISTANT ═══════ */
+.voice-card{padding:16px}
+.vc-head{display:flex;align-items:center;gap:13px;margin-bottom:12px}
+.vc-orb{width:44px;height:44px;flex:none;padding:11px;border-radius:14px;color:#fff;
+  background:linear-gradient(135deg,#7c3aed,#2563eb);box-shadow:var(--sh-brand);transition:.3s}
+.voice-card.is-live .vc-orb{animation:vcPulse 1.8s ease-in-out infinite}
+@keyframes vcPulse{0%,100%{box-shadow:0 0 0 0 color-mix(in srgb,var(--brand-1) 55%,transparent)}
+  50%{box-shadow:0 0 0 9px color-mix(in srgb,var(--brand-1) 0%,transparent)}}
+.vc-txt b{display:block;font-size:14px;font-weight:800}
+.vc-txt small{display:block;font-size:11.5px;color:var(--txt-3);margin-top:2px;line-height:1.55}
+.vc-note{font-size:11.5px;line-height:1.75;color:var(--txt-3);background:var(--field);
+  border:1px solid var(--line);border-radius:12px;padding:10px 12px;margin-bottom:12px}
+.vc-status{margin-top:10px;font-size:12px;font-weight:700;text-align:center;
+  padding:9px 12px;border-radius:11px;background:var(--field);color:var(--txt-2)}
+.vc-status.live{background:color-mix(in srgb,var(--ok) 12%,transparent);color:var(--ok)}
+.vc-status.err{background:color-mix(in srgb,var(--danger) 12%,transparent);color:var(--danger)}
+.consent-body{font-size:13px;line-height:1.85;color:var(--txt-2);margin-bottom:8px}
+.consent-body b{color:var(--txt)}
+.consent-actions{display:flex;gap:9px;margin-top:16px}
+.consent-actions .btn{flex:1}
+
+/* The ElevenLabs widget mounts as a full-viewport fixed layer (inset:0,
+   z-index:1000) with its bubble 32px off its own bottom edge. Left alone it
+   lands on top of the bottom nav, and it would paint over our sheets and
+   toasts. Raise its floor above the nav and drop it below our own overlays. */
+elevenlabs-convai{
+  z-index:80!important;
+  inset-block-end:calc(var(--nav-h) + var(--safe-b))!important;
+}
+@media (min-width:760px){
+  /* desktop turns the nav into an 88px side rail */
+  elevenlabs-convai{inset-inline-start:88px!important}
+}
+
 /* ═══════ TOAST ═══════ */
 .toast{
   position:fixed;inset-inline:0;margin-inline:auto;z-index:120;

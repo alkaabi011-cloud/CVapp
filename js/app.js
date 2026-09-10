@@ -960,4 +960,100 @@ addEventListener('beforeinstallprompt', ()=> setTimeout(maybeShowBanner, 1800));
 // iOS: no such event will ever fire, so offer the manual route on its own.
 if(IS_IOS) setTimeout(maybeShowBanner, 2200);
 
+/* ═══════════════════════════════════════════════════════════
+   VOICE ASSISTANT (ElevenLabs ConvAI widget)
+
+   Deliberate choices:
+   - Only the PUBLIC agent id lives here. An API key would be readable by
+     anyone viewing source on a static site, so agent creation stays
+     server-side and never ships in this bundle.
+   - The 1.5MB widget bundle is fetched ON DEMAND, not on every page load,
+     and only after the user has agreed — no third-party code runs for
+     someone who never asks for it.
+   - Version is pinned: an upstream release cannot silently break the app.
+   - The service worker never caches this; it genuinely needs the network,
+     so we say so instead of failing mutely.
+   ═══════════════════════════════════════════════════════════ */
+const VOICE_AGENT_ID = 'agent_6401m254x0c0fg8rfedqxtcv6qf9';
+const VOICE_SRC = 'https://unpkg.com/@elevenlabs/convai-widget-embed@0.18.1';
+const VOICE_CONSENT_KEY = 'cvb.voiceConsent';
+let voiceLoading = false;
+
+const voiceCard   = ()=> $('.voice-card');
+const voiceStatus = (msg, cls)=>{
+  const el = $('#vcStatus');
+  if(!msg){ el.hidden = true; return; }
+  el.hidden = false; el.textContent = msg; el.className = 'vc-status' + (cls?' '+cls:'');
+};
+const voiceIsLive = ()=> !!document.querySelector('elevenlabs-convai');
+
+function setVoiceUI(live){
+  $('#btnVoice').textContent = t(live ? 'voice_stop' : 'voice_start');
+  $('#btnVoice').classList.toggle('btn-brand', !live);
+  $('#btnVoice').classList.toggle('btn-soft', live);
+  voiceCard()?.classList.toggle('is-live', live);
+  voiceStatus(live ? t('voice_active') : '', live ? 'live' : '');
+}
+
+function loadVoiceScript(){
+  if(window.__voiceScript) return window.__voiceScript;
+  window.__voiceScript = new Promise((res,rej)=>{
+    const s=document.createElement('script');
+    s.src=VOICE_SRC; s.async=true; s.type='text/javascript';
+    s.onload=res;
+    s.onerror=()=>{ window.__voiceScript=null; rej(new Error('script failed')); };
+    document.head.appendChild(s);
+  });
+  return window.__voiceScript;
+}
+
+async function startVoice(){
+  if(!navigator.onLine){ voiceStatus(t('voice_offline'),'err'); return; }
+  voiceLoading = true;
+  voiceStatus(t('voice_loading'));
+  try{
+    await loadVoiceScript();
+    if(!voiceIsLive()){
+      const el=document.createElement('elevenlabs-convai');
+      el.setAttribute('agent-id', VOICE_AGENT_ID);
+      document.body.appendChild(el);
+    }
+    setVoiceUI(true);
+  }catch(e){
+    voiceStatus(t('voice_failed'),'err');
+  }finally{ voiceLoading = false; }
+}
+function stopVoice(){
+  document.querySelectorAll('elevenlabs-convai').forEach(el=>el.remove());
+  setVoiceUI(false);
+}
+
+function voiceConsentSheet(){
+  sheet(t('voice_consent_title'), `
+    <p class="consent-body">${t('voice_consent_body')}</p>
+    <div class="consent-actions">
+      <button class="btn btn-soft" data-vc="no">${t('voice_consent_cancel')}</button>
+      <button class="btn btn-brand" data-vc="yes">${t('voice_consent_ok')}</button>
+    </div>`, root=>{
+    root.addEventListener('click', ev=>{
+      const b=ev.target.closest('[data-vc]'); if(!b) return;
+      closeSheet();
+      if(b.dataset.vc==='yes'){
+        try{ localStorage.setItem(VOICE_CONSENT_KEY,'1'); }catch(e){}
+        startVoice();
+      }
+    });
+  });
+}
+
+$('#btnVoice').onclick = ()=>{
+  if(voiceLoading) return;
+  if(voiceIsLive()) return stopVoice();
+  let agreed=null;
+  try{ agreed = localStorage.getItem(VOICE_CONSENT_KEY); }catch(e){}
+  agreed ? startVoice() : voiceConsentSheet();
+};
+addEventListener('offline', ()=>{ if(voiceIsLive()){ stopVoice(); voiceStatus(t('voice_offline'),'err'); } });
+setVoiceUI(false);
+
 boot();

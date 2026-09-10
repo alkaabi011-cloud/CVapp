@@ -1,8 +1,13 @@
 # منشئ السيرة الذاتية · CV Builder
 
 A dependency-free, offline-first PWA that builds a professional CV from 14 templates.
-Arabic-first (RTL native), with a full English/LTR mode. Everything runs on-device —
-no server, no account, no network call the app depends on.
+Arabic-first (RTL native), with a full English/LTR mode. Your CV data runs entirely
+on-device — no server, no account, no network call the app depends on.
+
+> **One exception, stated plainly:** the optional voice assistant. It is off until you
+> turn it on and agree to a consent prompt. While running, your microphone audio is
+> streamed to ElevenLabs for processing. Your CV data is never sent — the assistant
+> cannot read it. Nothing third-party is even downloaded until you opt in.
 
 ---
 
@@ -146,6 +151,8 @@ is independent of the UI's — you can write an English CV in an Arabic interfac
   uppercase headings, independent CV direction.
 - **Export**: PDF (via print), direct print, standalone HTML, Web Share, JSON backup.
 - Autosave, completeness ring, sample data, light/dark, installable, offline.
+- **Voice assistant** (optional, opt-in): an ElevenLabs conversational agent,
+  lazy-loaded on demand at a pinned version so an upstream release cannot break the app.
 - **Empty-state preview**: with nothing entered, an empty profile would render a
   technically-correct blank A4 — which reads as a broken app. Preview detects this
   and shows an explanation plus two ways out (fill in details / load sample), and
