@@ -157,12 +157,13 @@ function applyLang(){
 /* ═══════ ROUTER ═══════ */
 const VIEW_TITLES = {home:['app_name','app_tag'],builder:['nav_builder','tile_builder'],
   templates:['nav_templates','tile_templates'],preview:['nav_preview','tile_preview'],
-  settings:['nav_settings','tile_settings']};
+  settings:['nav_settings','tile_settings'],
+  security:['gate_title','gate_sub']};
 function go(v, push=true){
   if(!$('#view-'+v)) return;
   VIEW = v;
   $$('.view').forEach(s=>s.classList.toggle('is-active', s.id==='view-'+v));
-  $$('.tab').forEach(b=>b.classList.toggle('is-on', b.dataset.go===v));
+  $$('.tab').forEach(b=>b.classList.toggle('is-on', b.dataset.go===(v==='security'?'settings':v)));
   const [a,b] = VIEW_TITLES[v];
   $('#viewTitle').textContent = t(a); $('#viewSub').textContent = t(b);
   $('#btnBack').hidden = (v==='home');
@@ -170,6 +171,7 @@ function go(v, push=true){
   moveInk();
   if(v==='preview') renderPreview();
   if(v==='settings') renderFormatCard(), storageInfo();
+  if(v==='security') Gate.renderSecurity();
   if(push) history.replaceState({v},'','#'+v);
 }
 function moveInk(){
@@ -744,7 +746,7 @@ $('#importInput').addEventListener('change', e=>{
 });
 $('#btnReset').onclick = ()=>{
   if(!confirm(t('confirm_reset'))) return;
-  localStorage.removeItem(KEY); S=defaultState(); LANG=S.lang;
+  localStorage.removeItem(KEY); Gate.wipe(); S=defaultState(); LANG=S.lang;
   window.__openItems={}; applyLang(); applyTheme(); toast(t('done')); go('home');
 };
 $('#btnSample').onclick = ()=>{ loadSample(); toast(t('sample_loaded')); go('preview'); };
@@ -791,7 +793,7 @@ $('#btnLang').onclick = ()=>{
   if(!S.settings._fontTouched) S.settings.fontFamily = LANG==='ar' ? 'cairo' : 'inter';
   save(true); applyLang(); go(VIEW,false);
 };
-$('#btnBack').onclick = ()=> go('home');
+$('#btnBack').onclick = ()=> go(VIEW==='security' ? 'settings' : 'home');
 $('#sheetClose').onclick = closeSheet;
 $('#sheetScrim').onclick = closeSheet;
 document.addEventListener('keydown', e=>{ if(e.key==='Escape') closeSheet(); });
@@ -866,6 +868,7 @@ function renderAll(){
 function boot(){
   load(); applyTheme();
   applyLang();          // -> renderAll()
+  Gate.boot();          // lock screen, if the gate is on
   const hash=(location.hash||'').replace('#','');
   go(VIEW_TITLES[hash]?hash:'home', false);
   setTimeout(moveInk,60);

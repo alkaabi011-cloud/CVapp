@@ -14,7 +14,7 @@
    ═══════════════════════════════════════════════════════════════ */
 
 // Bump this on every release — it is what retires the old caches.
-const VERSION    = 'v1.0.7';
+const VERSION    = 'v1.0.9';
 const SHELL      = `cvb-shell-${VERSION}`;
 const FONTS      = `cvb-fonts-${VERSION}`;
 
@@ -30,7 +30,10 @@ const SHELL_URLS = [
   './icons/icon-192.png',
   './icons/icon-512.png',
   './icons/icon-maskable-512.png',
-  './icons/apple-touch-icon.png'
+  './icons/apple-touch-icon.png',
+  './css/gate.css',
+  './js/gate-core.js',
+  './js/gate.js'
 ];
 
 const FONT_HOSTS = ['fonts.googleapis.com', 'fonts.gstatic.com'];

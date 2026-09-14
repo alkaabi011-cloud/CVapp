@@ -160,6 +160,63 @@ is independent of the UI's — you can write an English CV in an Arabic interfac
 
 ---
 
+## Verification gate
+
+Settings → **بوابة التحقق** locks the app on launch. Any enrolled method unlocks it:
+
+- **TOTP** — `totp_setup()` creates a 160-bit secret and an `otpauth://` QR for
+  Google/Microsoft Authenticator; `totp_verify(code)` checks it with ±1 step of
+  clock drift and **refuses replay** of a code that already passed (RFC 6238 §5.2).
+  The secret is only written to storage after you confirm a first code, so an
+  abandoned setup leaves nothing behind.
+- **Device biometrics (WebAuthn)** — Face ID / Touch ID / Windows Hello / Android,
+  platform authenticator, `userVerification: required`. Each unlock verifies
+  challenge, origin, rpId hash, UP+UV flags, signature counter, and the
+  **signature against the public key saved at registration** (ES256 and RS256).
+- **Face (face-api.js, fully local)** — explicit consent screen before *every*
+  camera start (default focus on "No"); library and model weights are served
+  from this site, never a CDN; only 128 numbers are stored, never an image;
+  needs 3 consecutive matching frames; camera tracks are stopped on every path.
+  **"Delete descriptor permanently"** removes it from storage — it was never
+  uploaded and is excluded from JSON backups, so no other copy exists.
+- **Attempt log** — last 20 shown (100 kept): method, purpose, outcome, time.
+  Codes, secrets and descriptors are never written to it.
+- **Rate limiting** — 5 failed unlocks → 30 s block, doubling up to 15 min.
+
+### What it does and does not protect — read before relying on it
+
+It is a **local lock screen**. It stops someone who picks up an unlocked device.
+It does **not** stop someone technical with access to the browser:
+
+- The CV data behind it is **not encrypted**.
+- Its secrets (TOTP key, WebAuthn public key, face descriptor) live on the same device.
+- **Face matching has no liveness detection — a photo of the enrolled face can pass.**
+
+Enrol **two** methods. If you lose access to all of them, clearing site data
+removes the lock *and your CV* — keep a JSON export.
+
+### Verified
+
+- 57/57 core tests: RFC 4226 HOTP and RFC 6238 TOTP vectors, RFC 4648 base32,
+  drift/replay/format handling, DER⇄raw ECDSA ×500, and WebAuthn rejection of
+  wrong challenge, origin, type, rpId, missing UV/UP, foreign key, tampered data,
+  counter regression and malformed signatures.
+- The enrolment QR decodes (OpenCV) to the exact `otpauth://` URI.
+- In-app: replay refused, fresh code unlocks, rate limit refuses even a valid code,
+  camera never requested before consent or after declining, face resources load
+  only from this origin, log leaks no secrets.
+
+### Dependencies (vendored, MIT)
+
+| | version | size |
+|---|---|---|
+| `@vladmandic/face-api` — the maintained fork; the original `face-api.js` is unmaintained since 2020 | 1.7.15 | 1.3 MB |
+| tiny face detector + 68-point landmarks + recognition models | 1.7.15 | 6.8 MB |
+| `qrcode-generator` | 2.0.4 | 57 KB |
+
+Face files are lazy-loaded on first use and then cached by the service worker —
+they are deliberately **not** in the install-time shell.
+
 ## Known limits
 
 - PDF export goes through the browser's print dialog rather than a bundled PDF
